@@ -1,0 +1,68 @@
+{
+  "ssm:account=171057908863:parameterName=/b365tech/pci/vpc-id:region=us-west-2": "vpc-081892aa3471307c3",
+  "vpc-provider:account=171057908863:filter.vpc-id=vpc-081892aa3471307c3:region=us-west-2:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-081892aa3471307c3",
+    "vpcCidrBlock": "20.0.0.0/16",
+    "ownerAccountId": "171057908863",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "publicSubnet",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-002906b2831d136bd",
+            "cidr": "20.0.0.0/24",
+            "availabilityZone": "us-west-2a",
+            "routeTableId": "rtb-008d6c66b42a879d0"
+          },
+          {
+            "subnetId": "subnet-0298e8426691631ce",
+            "cidr": "20.0.1.0/24",
+            "availabilityZone": "us-west-2b",
+            "routeTableId": "rtb-0c8a7909584511ece"
+          }
+        ]
+      },
+      {
+        "name": "application",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-08eb466c2a968724b",
+            "cidr": "20.0.2.0/24",
+            "availabilityZone": "us-west-2a",
+            "routeTableId": "rtb-0927137050cf45076"
+          },
+          {
+            "subnetId": "subnet-0a5167b960ecdbc15",
+            "cidr": "20.0.3.0/24",
+            "availabilityZone": "us-west-2b",
+            "routeTableId": "rtb-0a5109e5a5d789e28"
+          }
+        ]
+      },
+      {
+        "name": "database",
+        "type": "Isolated",
+        "subnets": [
+          {
+            "subnetId": "subnet-0025dfbfd66215280",
+            "cidr": "20.0.4.0/24",
+            "availabilityZone": "us-west-2a",
+            "routeTableId": "rtb-098cabc7e1413d454"
+          },
+          {
+            "subnetId": "subnet-01f4eab116e387947",
+            "cidr": "20.0.5.0/24",
+            "availabilityZone": "us-west-2b",
+            "routeTableId": "rtb-0499f14e2639841ca"
+          }
+        ]
+      }
+    ]
+  },
+  "acknowledged-issue-numbers": [
+    32775
+  ]
+}
