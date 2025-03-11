@@ -24,7 +24,7 @@ export class AWSLoadBalancerControllerAddOn {
       namespace: this.nameSpace,
       values: {
         clusterName: this.cluster.clusterName,
-        ServiceAccount: {
+        serviceAccount: {
           create: false,
           name: serviceAccountName,
         },

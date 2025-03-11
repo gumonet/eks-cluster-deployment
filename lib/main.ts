@@ -65,32 +65,13 @@ export class BancDemoEKSDeployment extends Stack {
       props.adminPasswordSecretName,
       this.region
     ).deploy();
+
+    //Add Load balancer controller
     new AWSLoadBalancerControllerAddOn(cluster, "kube-system").deploy();
     //Secrets store not is necessary to run pods
 
-    /*****
-     **** move alll HelmChart to addons library
-     **** Start to add istio
-     */
-
     /*
      // Deploy AWS Load Balancer Controller
-     
-     values:
-  clusterName: pci-k8s-cluster
-  createIngressClassResource: true
-  enableServiceMutatorWebhook: false
-  enableShield: false
-  enableWaf: false
-  enableWafv2: false
-  image:
-    repository: 602401143452.dkr.ecr.us-west-2.amazonaws.com/amazon/aws-load-balancer-controller
-  ingressClass: alb
-  region: us-west-2
-  serviceAccount:
-    create: false
-    name: aws-load-balancer-controller
-  vpcId: vpc-081892aa3471307c3
 
     // Deploy Istio Base
     cluster.addHelmChart('IstioBase', {
@@ -117,8 +98,14 @@ export class BancDemoEKSDeployment extends Stack {
 
 //Tmw test
 /**
+ * Validar que el service account tenga el rol establecido
+ * Test pod with load balancer service expose
+ * Lograr levantar load balancers con el rol establecido
+ *  Al parecer existe un error de permisos que no permite que el rol despliegue LB
+ *  Volver a correr el deploy service y validar el error
+ *  el grupo es: BancDemoEKSDeployment-BancDemoEKSawsloadbalancercon-2wHQPyP4TfP8
+ *
  * add istio
- * deploy services load balanced
  * deploy a pod
  * test get secrets manager data
  * test get environment data
