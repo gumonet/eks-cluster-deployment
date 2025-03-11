@@ -19,7 +19,7 @@ export class ArgoCdAddOn {
       });
   }
   deplooyArgoCd(argocdServerAdminPassword: string) {
-    // this.createNameSpace(this.cluster);
+    // this.createNameSpace(this.cluster); Uncomment that when redeploy and add node dependecy
     this.cluster.addHelmChart("ArgoCD", {
       createNamespace: true,
       chart: "argo-cd",

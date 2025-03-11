@@ -3,12 +3,18 @@ import { Construct } from "constructs";
 import { Vpc } from "aws-cdk-lib/aws-ec2";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
-import { ArgoCdAddOn, AWSLoadBalancerControllerAddOn } from "./K8sAddOns/";
+import {
+  ArgoCdAddOn,
+  AWSLoadBalancerControllerAddOn,
+  IstioBaseAddOn,
+  IstioCniAddOn,
+} from "./K8sAddOns/";
 import {
   createControlPlaneSG,
   createEksAdminRole,
   createEkscluster,
 } from "./modules";
+import { IstioControlPlaneAddOn } from "./K8sAddOns/IstioControlPlaneAddOn";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 const PCI_VPC_ID_PARAMETER_NAME = "/b365tech/pci/vpc-id";
@@ -68,46 +74,22 @@ export class BancDemoEKSDeployment extends Stack {
 
     //Add Load balancer controller
     new AWSLoadBalancerControllerAddOn(cluster, "kube-system").deploy();
+    //Add Isto Base
+    new IstioBaseAddOn(cluster).deploy();
+    new IstioControlPlaneAddOn(
+      cluster,
+      "internal.banc365.com",
+      "demo"
+    ).deploy();
+    new IstioCniAddOn(cluster).deploy();
+
     //Secrets store not is necessary to run pods
-
-    /*
-     // Deploy AWS Load Balancer Controller
-
-    // Deploy Istio Base
-    cluster.addHelmChart('IstioBase', {
-      chart: 'base',
-      repository: 'https://istio-release.storage.googleapis.com/charts',
-      namespace: 'istio-system',
-    });
-
-    // Deploy Istio Control Plane
-    cluster.addHelmChart('IstioControlPlane', {
-      chart: 'istiod',
-      repository: 'https://istio-release.storage.googleapis.com/charts',
-      namespace: 'istio-system',
-    });
-
-    // Deploy Istio CNI
-    cluster.addHelmChart('IstioCNI', {
-      chart: 'cni',
-      repository: 'https://istio-release.storage.googleapis.com/charts',
-      namespace: 'istio-system',
-    }); */
   } //Enc class
 }
 
 //Tmw test
 /**
- * Validar que el service account tenga el rol establecido
- * Test pod with load balancer service expose
- * Lograr levantar load balancers con el rol establecido
- *  Al parecer existe un error de permisos que no permite que el rol despliegue LB
- *  Volver a correr el deploy service y validar el error
- *  el grupo es: BancDemoEKSDeployment-BancDemoEKSawsloadbalancercon-2wHQPyP4TfP8
  *
- * add istio
- * deploy a pod
- * test get secrets manager data
  * test get environment data
  * check permisions to role for connect to ssm
  *
