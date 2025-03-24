@@ -82,7 +82,6 @@ export class BancDemoEKSDeployment extends Stack {
       "demo"
     ).deploy();
     new IstioCniAddOn(cluster).deploy();
-
     //Secrets store not is necessary to run pods
   } //Enc class
 }
