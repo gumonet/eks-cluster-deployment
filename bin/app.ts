@@ -10,4 +10,5 @@ new BancDemoEKSDeployment(app, "BancDemoEKSDeployment", {
   credentialsSecretName: "internal-k8s-argocd-repository-credentials",
   repositoryUrl: "https://github.com/b365tech/k8s-workloads.git",
   applicationPath: "pci/envs/dev",
+  clusterName: "BancDemoEKS",
 });

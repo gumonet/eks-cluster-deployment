@@ -18,7 +18,6 @@ import { IstioControlPlaneAddOn } from "./K8sAddOns/IstioControlPlaneAddOn";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 const PCI_VPC_ID_PARAMETER_NAME = "/b365tech/pci/vpc-id";
-const PCI_K8S_CLUSTER_ADMIN_ROLE_NAME = "BancDemoK8sClusterAdminRole";
 
 interface infraStackProps extends StackProps {
   environment: string;
@@ -26,12 +25,14 @@ interface infraStackProps extends StackProps {
   credentialsSecretName: string;
   repositoryUrl: string;
   applicationPath: string;
+  clusterName: string;
 }
 
 export class BancDemoEKSDeployment extends Stack {
   constructor(scope: Construct, id: string, props: infraStackProps) {
     super(scope, id, props);
 
+    const PCI_K8S_CLUSTER_ADMIN_ROLE_NAME = `${props.clusterName}-K8sClusterAdminRole`;
     const vpcId = StringParameter.valueFromLookup(
       this,
       PCI_VPC_ID_PARAMETER_NAME
@@ -42,14 +43,14 @@ export class BancDemoEKSDeployment extends Stack {
     const controlPlaneSecurityGroup = createControlPlaneSG(
       this,
       vpc,
-      "DemoEKSControlPlaneSG"
+      props.clusterName + "EKSControlPlaneSG"
     );
     //Create EKS cluster admin role
     const clusterAdminRole = createEksAdminRole(
       this,
       this.account,
       PCI_K8S_CLUSTER_ADMIN_ROLE_NAME,
-      "BancDemo"
+      props.clusterName
     );
 
     //Create EKS cluster
@@ -58,7 +59,7 @@ export class BancDemoEKSDeployment extends Stack {
       vpc,
       controlPlaneSecurityGroup,
       clusterAdminRole,
-      "BancDemoEKS",
+      props.clusterName + "EKS",
       1,
       3,
       2,
@@ -76,13 +77,9 @@ export class BancDemoEKSDeployment extends Stack {
     new AWSLoadBalancerControllerAddOn(cluster, "kube-system").deploy();
     //Add Isto Base
     new IstioBaseAddOn(cluster).deploy();
-    new IstioControlPlaneAddOn(
-      cluster,
-      "internal.banc365.com",
-      "demo"
-    ).deploy();
+    new IstioControlPlaneAddOn(cluster, "demo.banc365.com", "demo").deploy();
     new IstioCniAddOn(cluster).deploy();
-    //Secrets store not is necessary to run pods
+    //Secrets store is not necessary to run pods
   } //Enc class
 }
 
