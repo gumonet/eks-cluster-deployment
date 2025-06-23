@@ -26,6 +26,8 @@ interface infraStackProps extends StackProps {
   repositoryUrl: string;
   applicationPath: string;
   clusterName: string;
+  meshId: string; // Optional, used for Istio control plane
+  network: string; // Optional, used for Istio control plane
 }
 
 export class BancDemoEKSDeployment extends Stack {
@@ -77,7 +79,7 @@ export class BancDemoEKSDeployment extends Stack {
     new AWSLoadBalancerControllerAddOn(cluster, "kube-system").deploy();
     //Add Isto Base
     new IstioBaseAddOn(cluster).deploy();
-    new IstioControlPlaneAddOn(cluster, "demo.banc365.com", "demo").deploy();
+    new IstioControlPlaneAddOn(cluster, props.meshId, props.network).deploy();
     new IstioCniAddOn(cluster).deploy();
     //Secrets store is not necessary to run pods
   } //Enc class

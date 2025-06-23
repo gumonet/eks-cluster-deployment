@@ -1,7 +1,7 @@
 import { Cluster, KubernetesManifest } from "aws-cdk-lib/aws-eks";
 import { createNamespace } from "../utils/cluster-utils";
 import { ISecurityGroup } from "aws-cdk-lib/aws-ec2";
-export const ISTIO_VERSION = "1.20.3";
+export const ISTIO_VERSION = "1.26.2";
 
 export class IstioBaseAddOn {
   constructor(private cluster: Cluster) {}
