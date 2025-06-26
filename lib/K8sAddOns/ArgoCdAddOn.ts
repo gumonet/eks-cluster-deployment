@@ -25,6 +25,7 @@ export class ArgoCdAddOn {
       chart: "argo-cd",
       repository: "https://argoproj.github.io/argo-helm",
       namespace: "argocd",
+      release: "argocd",
       values: {
         configs: {
           secret: {

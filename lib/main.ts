@@ -28,6 +28,7 @@ interface infraStackProps extends StackProps {
   clusterName: string;
   meshId: string; // Optional, used for Istio control plane
   network: string; // Optional, used for Istio control plane
+  vpcId: string; // Optional, if not provided will use the parameter store
 }
 
 export class BancDemoEKSDeployment extends Stack {
@@ -35,11 +36,11 @@ export class BancDemoEKSDeployment extends Stack {
     super(scope, id, props);
 
     const PCI_K8S_CLUSTER_ADMIN_ROLE_NAME = `${props.clusterName}-K8sClusterAdminRole`;
-    const vpcId = StringParameter.valueFromLookup(
+    /*const vpcId = StringParameter.valueFromLookup(
       this,
       PCI_VPC_ID_PARAMETER_NAME
-    );
-    const vpc = Vpc.fromLookup(this, "VPC", { vpcId: vpcId });
+    );*/
+    const vpc = Vpc.fromLookup(this, "VPC", { vpcId: props.vpcId });
 
     //Configure securirty group for EKS control plane
     const controlPlaneSecurityGroup = createControlPlaneSG(
